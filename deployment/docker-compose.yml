@@ -1,5 +1,6 @@
 services:
   backend:
+    # image: databank351/tailoring-backend:latest
     build: ../backend
     ports:
       - "5000:5000"
@@ -21,4 +22,3 @@ services:
       
 volumes:
   pg_data:
-    driver: local

@@ -5,7 +5,7 @@ on:
     paths:
       - "backend/**"
       - "deployment/**"
-      - ".github/**"
+      - ".github/workflows/backend.yml"
     branches: [main]
 
 jobs:
@@ -21,7 +21,24 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build and push
+      - name: Build and push Backend to docker hub
         run: |
-          docker build -t databank351/tailoring-backend ./backend
-          docker push databank351/tailoring-backend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tailoring-backend ./backend
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/tailoring-backend
+      
+      #  # 🔑 Prepare SSH key
+      # - name: Set up SSH key
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+      #     ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      # # 🚀 SSH into EC2 and restart backend container
+      # - name: Deploy Backend on EC2
+      #   run: |
+      #     ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+      #       cd tailoring-app/deployment
+      #       docker-compose pull backend
+      #       docker-compose up -d --no-deps --build backend
+      #     EOF
