@@ -18,7 +18,10 @@ import pool from "./core/database";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 app.use(express.json());
 
 app.use(securityMiddleware);
