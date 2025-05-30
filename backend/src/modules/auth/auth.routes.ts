@@ -1,6 +1,8 @@
 // src/modules/auth/auth.routes.ts
 import express from "express";
-import { register, login, 
+import { register, login,
+    refreshTokenController,
+    logoutController,
     forgotPasswordController, 
     resetPasswordController, 
     googleOAuthCallback, 
@@ -77,6 +79,11 @@ router.post("/signup", register);
  *         description: Invalid credentials
  */
 router.post("/login", login);
+
+router.get("/refresh", refreshTokenController);
+
+router.post("/logout", logoutController); // ✅ New logout route
+
 
 /**
  * @swagger

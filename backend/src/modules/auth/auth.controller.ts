@@ -1,8 +1,9 @@
 // src/modules/auth/auth.controller.ts
 import e, { Request, Response } from "express";
-import { registerUser, loginUser, forgotPassword, resetPassword, registerOAuthUser, assignUserRole } from "./auth.service";
+import { registerUser, loginUser, forgotPassword, resetPassword, registerOAuthUser, assignUserRole, refreshTokenService } from "./auth.service";
 import { registerValidation, loginValidation, forgotPasswordValidation, resetPasswordValidation, oauthValidation} from "./auth.validation";
 import logger from "../../core/logger";
+import { setTokenCookie } from "../../core/cookie.util";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -15,6 +16,8 @@ export const register = async (req: Request, res: Response) => {
     const validatedData = registerValidation.parse(req.body);
 
     const { token, user } = await registerUser(validatedData);
+    setTokenCookie(res, token); // ✅ Set cookie
+
     res.status(201).json({ message: "User registered successfully", token, user });
     return;
   } catch (error) {
@@ -35,6 +38,7 @@ export const login = async (req: Request, res: Response) => {
     const validatedData = loginValidation.parse(req.body);
 
     const { token } = await loginUser(validatedData);
+    setTokenCookie(res, token); // ✅ Set cookie
     res.status(200).json({ message: "Login successful", token });
     return;
   } catch (error) {
@@ -42,6 +46,40 @@ export const login = async (req: Request, res: Response) => {
     res.status(400).json({ error: (error as Error).message });
     return;
   }
+};
+
+export const refreshTokenController = async (req: Request, res: Response) => {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      res.status(401).json({ error: "Refresh token missing" });
+      return;
+    }
+
+    const { token: newToken } = await refreshTokenService(token); // ✅ Use service to refresh token
+    setTokenCookie(res, newToken); // ✅ Refresh cookie
+
+    res.status(200).json({
+      message: "Token refreshed",
+      token: newToken, // ✅ Backward compatible
+    });
+  } catch (error) {
+    res.status(403).json({ error: "Token is invalid or expired" });
+  }
+};
+
+export const logoutController = async (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+
+  res.status(200).json({
+    message: "Logged out successfully",
+    token: null, // ✅ backward compatible
+  });
 };
 
 export const forgotPasswordController = async (req: Request, res: Response) => {

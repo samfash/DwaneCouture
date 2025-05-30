@@ -13,6 +13,7 @@ import orderRoutes from "./modules/order/order.routes";
 import paymentRoutes from "./modules/payments/payment.routes";
 import notificationRoutes from "./modules/notification/notifications.routes";
 import pool from "./core/database";
+import cookieParser from "cookie-parser";
 
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use(securityMiddleware);
 app.use(rateLimiter);
 app.use(passport.initialize());
+app.use(cookieParser());
 
 setupSwagger(app);
 

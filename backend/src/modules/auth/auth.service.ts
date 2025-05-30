@@ -1,4 +1,5 @@
 import { Request } from "express";
+import jwt from "jsonwebtoken";
 import { createUser,
   findUserByEmail, 
   findUserByResetToken, 
@@ -76,6 +77,27 @@ export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
   const token = generateToken({ id:user.id, email: user.email, role: user.role });
   return { token };
 };
+
+export const refreshTokenService = async ( token: string) => {
+  if (!token) {
+    throw new Error("User ID and token are required");
+  }
+
+  const decoded = jwt.verify(token, config.auth.jwtSecret) as {
+    id: string;
+    email: string;
+    role: string;
+    };
+  
+  const user = await findUserByEmail(decoded.email);
+    if (!user) {
+      throw new Error( "Invalid token");
+    }
+  
+  const newToken = generateToken({ id: user.id, email: user.email, role: user.role });
+  
+  return { token: newToken };
+}
 
 export const forgotPassword = async (data: ForgotPasswordRequest, req: Request): Promise<ForgotPasswordResponse> => {
   const { email } = data;
