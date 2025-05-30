@@ -25,19 +25,27 @@ if (!JWT_SECRET) {
 }
 
 export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
+
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    logger.warn(`Unauthorized access attempt from IP: ${req.ip}`);
+    res.status(401).json({ error: "Unauthorized: Missing or invalid token" });
+    return;
+  }
+
+  const tokenFromHeader = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+  const tokenFromCookie = req.cookies?.access_token;
+
+  const token = tokenFromHeader || tokenFromCookie;
+  if (!token) {
+    res.status(401).json({ error: 'Authentication token missing' });
+    return;
+  }
+
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      logger.warn(`Unauthorized access attempt from IP: ${req.ip}`);
-      res.status(401).json({ error: "Unauthorized: Missing or invalid token" });
-      return;
-    }
-
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
-
-    req.user = decoded;
-    next();
+    const payload = jwt.verify(token, JWT_SECRET) as User;
+    req.user = payload;
+      next();
   } catch (error) {
     if (error instanceof Error) {
       logger.error(`JWT Authentication Error: ${error.message}`);
