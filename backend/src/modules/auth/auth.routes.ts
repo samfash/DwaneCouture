@@ -161,5 +161,11 @@ router.get("/google/tailoringApp", passport.authenticate("google", { session: fa
 
 router.patch("/users/:id/role", authenticateJWT, authorizeAdmin, assignRoleController);
 
+router.get('/me', authenticateJWT, (req, res) => {
+  const { id, email, role } = req.user!;
+  res.status(200).json({ id, email, role });
+});
+
+
 
 export default router;
