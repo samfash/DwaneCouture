@@ -1,0 +1,121 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Moon, Sun, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
+
+const sections = [
+  { name: "Men", href: "/men" },
+  { name: "Women", href: "/women" },
+  { name: "How it Works", href: "/how-it-works" },
+  { name: "About", href: "/about" },
+];
+
+export default function Navbar() {
+   const pathname = usePathname();
+  const [isDark, setIsDark] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    setIsDark(darkQuery.matches);
+    const listener = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    darkQuery.addEventListener("change", listener);
+    return () => darkQuery.removeEventListener("change", listener);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", isDark);
+  }, [isDark]);
+
+  return (
+    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl rounded-2xl backdrop-blur-md bg-white/30 dark:bg-gray-900/30 border border-white/10 dark:border-white/20 shadow-lg px-6 py-3 flex justify-between items-center transition-all">
+      {/* Logo */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-2xl font-extrabold text-gray-800 dark:text-white"
+      >
+        <Link href="/">DwaneCouture</Link>
+      </motion.div>
+
+      {/* Navigation Links */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="hidden md:flex gap-6"
+      >
+        {sections.map((section) => (
+          <Link
+            key={section.name}
+            href={section.href}
+            className={clsx(
+              "text-sm font-semibold px-4 py-1.5 rounded-full transition-colors",
+              pathname === section.href
+                ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
+                : "text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
+            )}
+          >
+            {section.name}
+          </Link>
+        ))}
+      </motion.div>
+
+      {/* Theme Toggle */}
+     <div className="flex gap-3 items-center">
+      <motion.button
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3, duration: 0.4 }}
+        onClick={() => setIsDark(!isDark)}
+        className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 text-gray-800 dark:text-gray-100 transition-colors"
+        aria-label="Toggle Theme"
+      >
+        {isDark ? <Sun size={18} /> : <Moon size={18} />}
+      </motion.button>
+
+       {/* Hamburger */}
+        <button
+          className="md:hidden p-2 rounded-full text-gray-800 dark:text-gray-100 hover:bg-black/10 dark:hover:bg-white/10"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute top-full left-0 w-full bg-white dark:bg-gray-900 rounded-b-2xl border-t border-gray-300 dark:border-gray-700 mt-2 shadow-md md:hidden"
+          >
+            <div className="flex flex-col items-center py-4">
+              {sections.map((section) => (
+                <Link
+                  key={section.name}
+                  href={section.href}
+                  onClick={() => setIsOpen(false)}
+                  className={clsx(
+                    "w-full text-center py-2 px-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800",
+                    pathname === section.href &&
+                      "bg-gray-200 dark:bg-gray-800 text-black dark:text-white"
+                  )}
+                >
+                  {section.name}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
+}
