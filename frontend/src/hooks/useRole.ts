@@ -11,3 +11,13 @@ export function useRole(allowedRoles: ("admin" | "tailor" | "user")[]) {
 
   return allowedRoles.includes(user.role);
 }
+
+export function useRoleChecks() {
+  const { user} = useAuth();
+
+  return {
+    isAdmin: () => user?.role === "admin",
+    isTailor: () => user?.role === "tailor",
+    isUser: () => user?.role === "user",
+  };
+}

@@ -18,8 +18,34 @@ export const fetcher = async (
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || err.message || 'Unknown error');
+
+    // const formattedError =
+    //   Array.isArray(err)
+    //     ? JSON.stringify(err, null, 2)
+    //     : err.error || err.message || 'Unknown error';
+
+    // throw new Error(formattedError);
+
+    if (Array.isArray(err)) {
+    const messages = err.map((e) => e.message).join('\n');
+    console.error("test 1 ",messages);
+    throw new Error(messages);
+    }
+
+     if (err?.errors && Array.isArray(err.errors)) {
+    type ErrorItem = { message: string };
+    const messages = err.errors.map((e: ErrorItem) => e.message).join('\n');
+    throw new Error(messages);
   }
 
+  if (typeof err === "object" && err !== null) {
+    const message = err.message || err.error || "Unknown error";
+    throw new Error(message);
+  }
+
+    throw new Error("An unknown error occurred");
+  }
+  console.log("test 3 ",res.status, res.statusText);
   return res.json();
+
 };

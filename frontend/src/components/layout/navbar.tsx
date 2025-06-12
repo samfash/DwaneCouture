@@ -6,6 +6,7 @@ import { Moon, Sun, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { useAuth } from "@/src/hooks/useAuth";
 
 const sections = [
   { name: "Men", href: "/men" },
@@ -18,6 +19,8 @@ export default function Navbar() {
    const pathname = usePathname();
   const [isDark, setIsDark] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+   const { user } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -67,7 +70,7 @@ export default function Navbar() {
       </motion.div>
 
       {/* Theme Toggle */}
-     <div className="flex gap-3 items-center">
+     <div className="flex gap-3 items-center relative">
       <motion.button
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -78,6 +81,44 @@ export default function Navbar() {
       >
         {isDark ? <Sun size={18} /> : <Moon size={18} />}
       </motion.button>
+
+      {/* Auth logic */}
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-full text-sm hover:opacity-90 transition"
+              >
+                {user.email}
+              </button>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
+                  <Link
+                    href="/dashboard"
+                    className="block px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      document.cookie = "access_token=; Max-Age=0; path=/";
+                      location.reload();
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              href="/register"
+              className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-full text-sm hover:opacity-90 transition"
+            >
+              Sign Up
+            </Link>
+          )}
 
        {/* Hamburger */}
         <button
