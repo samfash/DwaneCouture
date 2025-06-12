@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signup, login } from "@/src/lib/auth"; // Adjust the import based on your auth functions
+import { useAuth } from "@/src/hooks/useAuth";
 
 export default function AuthForm({ type }: { type: "login" | "register" }) {
   const router = useRouter();
@@ -11,18 +12,23 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { refetch } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    
     try {
       const endpoint = type === "login" ? login : signup;
       await endpoint(email, password);
 
+      await refetch();
+
       if (type === "register") {
         router.push("/profile/create"); // Redirect to profile creation
+        router.refresh(); // Refresh to ensure user data is updated
       } else {
         router.push("/"); // Redirect to homepage on login
       }

@@ -15,5 +15,8 @@ export const resetPassword = (resetToken: string, newPassword: string) =>{
 export const checkProtected = () =>{
   return fetcher('/protected', 'GET', undefined);}
 
-export const logout = () =>
-  fetcher('/auth/logout', 'POST', undefined);
+export const logout = async () =>{
+ await fetch("/auth/logout", {
+    method: "POST",
+    credentials: "include",
+  });}

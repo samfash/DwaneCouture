@@ -1,17 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { fetcher } from "@/src/lib/api";
+import { useAuth } from "@/src/hooks/useAuth";
+
 
 export default function ProfileForm() {
   const router = useRouter();
+  const {user } = useAuth();
 
   const [profile, setProfile] = useState({
+    user_id: "",
     full_name: "",
     gender: "male",
     delivery_address: "",
   });
+
+  useEffect(() => {
+  if (user?.id) {
+    setProfile((prev) => ({ ...prev, user_id: user.id }));
+  }
+  }, [user]);
 
   const [measurements, setMeasurements] = useState<Record<string, number | undefined>>({});
   const [error, setError] = useState("");
@@ -32,6 +42,7 @@ export default function ProfileForm() {
       router.push("/");
     } catch (err: unknown) {
       if (err instanceof Error) {
+        console.log("Error creating profile:", err);
         setError(err.message);
       } else {
         setError("An unexpected error occurred.");

@@ -13,13 +13,12 @@ interface AuthState {
   error: string | null;
 }
 
-export function useAuth(): AuthState {
+export function useAuth(): AuthState & { refetch: () => Promise<void> } {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchUser = async () => {
+  const fetchUser = async () => {
       try {
         const userData = await fetcher("/auth/me", "GET");
         setUser(userData as AuthUser);
@@ -31,8 +30,9 @@ export function useAuth(): AuthState {
       }
     };
 
+  useEffect(() => {
     fetchUser();
   }, []);
 
-  return { user, loading, error };
+  return { user, loading, error, refetch: fetchUser };
 }

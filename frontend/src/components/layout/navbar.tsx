@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+// import Image from "next/image";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter} from "next/navigation";
 import clsx from "clsx";
 import { useAuth } from "@/src/hooks/useAuth";
+import { logout } from "@/src/lib/auth";
 
 const sections = [
   { name: "Men", href: "/men" },
@@ -19,8 +21,10 @@ export default function Navbar() {
    const pathname = usePathname();
   const [isDark, setIsDark] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-   const { user } = useAuth();
+   const { user, refetch} = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+   const dropdownRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -33,6 +37,21 @@ export default function Navbar() {
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
   }, [isDark]);
+
+    // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !(dropdownRef.current as HTMLElement).contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl rounded-2xl backdrop-blur-md bg-white/30 dark:bg-gray-900/30 border border-white/10 dark:border-white/20 shadow-lg px-6 py-3 flex justify-between items-center transition-all">
@@ -84,12 +103,18 @@ export default function Navbar() {
 
       {/* Auth logic */}
           {user ? (
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-full text-sm hover:opacity-90 transition"
-              >
-                {user.email}
+                className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-full text-sm hover:opacity-90 transition">
+                {/* <Image
+                  src="https://via.placeholder.com/30"
+                  alt="avatar"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 rounded-full border border-gray-300"
+                /> */}
+                <span className="hidden sm:inline">{user.email}</span>
               </button>
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
@@ -100,10 +125,13 @@ export default function Navbar() {
                     Dashboard
                   </Link>
                   <button
-                    onClick={() => {
-                      document.cookie = "access_token=; Max-Age=0; path=/";
-                      location.reload();
-                    }}
+                    onClick={async() => {
+                      console.log("User before logout", user);
+                      await logout();
+                      await refetch();
+                      console.log("User after logout", user);
+                      router.push("/");} // Redirect to login after logout
+                    }
                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Logout
