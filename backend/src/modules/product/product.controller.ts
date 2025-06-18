@@ -29,9 +29,16 @@ export const createProductController = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllProductsController = async (_req: Request, res: Response) => {
+export const getAllProductsController = async (req: Request, res: Response) => {
   try {
-    const products = await getAllProductsService();
+    const category = req.query.category as "male" | "female" | undefined;
+
+    if (category && category !== "male" && category !== "female") {
+      res.status(400).json({ error: "Invalid category. Must be 'male' or 'female'." });
+      return ;
+    }
+
+    const products = await getAllProductsService(category);
     res.status(200).json(products);
   } catch (err: any) {
     logger.error("❌ Error fetching products:", err.message);

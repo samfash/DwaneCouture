@@ -8,7 +8,7 @@
     "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles",
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "nodemon src/server.ts",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],

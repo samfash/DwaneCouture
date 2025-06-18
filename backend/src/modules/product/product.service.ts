@@ -20,8 +20,8 @@ import {
   };
   
   // ✅ Get all products
-  export const getAllProductsService = async (): Promise<Product[]> => {
-    return await getAllProducts();
+  export const getAllProductsService = async (category?: "male" | "female"): Promise<Product[]> => {
+    return await getAllProducts(category);
   };
   
   // ✅ Get single product
