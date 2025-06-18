@@ -1,16 +1,16 @@
 import { fetcher } from './api';
 
-export const createOrder = (token: string, order: unknown) =>
-  fetcher(`/api/orders`, 'POST', order, token);
+export const createOrder = (order: unknown) =>
+  fetcher(`/api/orders`, 'POST', order);
 
-export const getOrders = (token: string) =>
-  fetcher(`/api/orders`, 'GET', undefined, token);
+export const getOrders = () =>
+  fetcher(`/api/orders`, 'GET', undefined);
 
-export const getOrderById = (token: string, orderId: string) =>
-  fetcher(`/api/orders/${orderId}`, 'GET', undefined, token);
+export const getOrderById = (orderId: string) =>
+  fetcher(`/api/orders/${orderId}`, 'GET', undefined);
 
-export const updateOrderStatus = (token: string, orderId: string, order_status: string) =>
-  fetcher(`/api/orders/${orderId}`, 'PATCH', { order_status }, token);
+export const updateOrderStatus = (orderId: string, order_status: string) =>
+  fetcher(`/api/orders/${orderId}`, 'PATCH', { order_status });
 
-export const deleteOrder = (token: string, orderId: string) =>
-  fetcher(`/api/orders/${orderId}`, 'DELETE', undefined, token);
+export const deleteOrder = (orderId: string) =>
+  fetcher(`/api/orders/${orderId}`, 'DELETE', undefined);

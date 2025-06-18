@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetcher } from "@/src/lib/api";
-import { getProfile } from "@/src/lib/profile";
+import { getProfile, updateProfile } from "@/src/lib/profile";
 import { useAuth } from "@/src/hooks/useAuth";
 
 export default function ProfileUpdateForm() {
@@ -45,20 +45,25 @@ export default function ProfileUpdateForm() {
     fetchProfile();
   }, [user, authLoading]);
 
-  const requiredFields = profile.gender === "male"
-    ? ["neck", "chest", "waist", "hips"]
-    : ["burst", "waist", "hips", "full_length"];
-
   const handleMeasurementChange = (key: string, value: string) => {
-    setMeasurements((prev) => ({ ...prev, [key]: parseFloat(value) || undefined }));
+      const parsed = parseFloat(value);
+    setMeasurements((prev) => ({ ...prev, [key]: isNaN(parsed) ? undefined : parsed }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    const cleanMeasurements: Record<string, number> = {};
+    for (const [key, value] of Object.entries(measurements)) {
+    if (typeof value === "number" && !isNaN(value)) {
+    cleanMeasurements[key] = value;
+    }
+    }
+    
     try {
-      await fetcher(`/api/profiles/${profile.id}`, "PATCH", { profile, measurements });
+      await updateProfile(profile.id, { profile, measurements: cleanMeasurements });
         setEditing(false);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -92,8 +97,22 @@ export default function ProfileUpdateForm() {
   if (authLoading || loading) return <div className="text-center py-12 text-gray-500">Loading...</div>;
   if (authError || error) return <div className="text-center py-12 text-red-500">{authError || error}</div>;
 
+  if (!profile) {
+    return (
+      <div className="text-center space-y-4">
+        <p className="text-gray-600">No profile found.</p>
+        <a
+          href="/profile/create"
+          className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Create Profile
+        </a>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-xl mx-auto py-12 px-6">
+    <div className="max-w-xl mx-auto py-4 px-6">
       <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-gray-900 p-6 rounded-xl shadow border dark:border-gray-700">
          <div className="flex justify-between items-center">
           <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">{editing ? "Edit Profile" : "Your Profile"}</h2>
@@ -120,6 +139,18 @@ export default function ProfileUpdateForm() {
         </div>
 
         <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gender</label>
+          <input
+            type="text"
+            value={profile.gender}
+            onChange={(e) => setProfile({ ...profile, gender: e.target.value })}
+            disabled={!editing}
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+            required
+          />
+        </div>
+
+        <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Delivery Address</label>
           <textarea
             value={profile.delivery_address}
@@ -132,14 +163,15 @@ export default function ProfileUpdateForm() {
 
         <div>
           <h3 className="text-md font-semibold text-gray-800 dark:text-white mb-2">Measurements</h3>
-          {requiredFields.map((field) => (
-            <div key={field} className="mb-4">
-              <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1 capitalize">{field.replace("_", " ")}</label>
+          {Object.entries(measurements).slice(2).map(([key, value]) => (
+            <div key={key} className="mb-4">
+              <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1 capitalize">{key.replace("/_/g", " ")}: {typeof value === "number" ? ` ${value}` : " –"}
+              </label>
               <input
                 type="number"
                 step="0.01"
-                value={measurements[field] ?? ""}
-                onChange={(e) => handleMeasurementChange(field, e.target.value)}
+                value={measurements[key] ?? ""}
+                onChange={(e) => handleMeasurementChange(key, e.target.value)}
                 disabled={!editing}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
               />

@@ -1,15 +1,24 @@
 import { fetcher } from './api';
 
-export const createNotification = (token: string, title: string, message: string) =>
-  fetcher('/api/notifications', 'POST', { title, message }, token);
+interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  created_at: string;
+}
 
-export const fetchNotifications = (token: string) =>
-  fetcher('/api/notifications', 'GET', undefined, token);
+export const createNotification = (title: string, message: string) =>{
+  return fetcher('/api/notifications', 'POST', { title, message });}
 
-export const markNotificationRead = (token: string, id: string) =>
-  fetcher(`/api/notifications/${id}/read`, 'PATCH', undefined, token);
+export const fetchNotifications =  async (): Promise<{notifications: Notification[]}> =>{
+ const res = await fetcher('/api/notifications', 'GET', undefined);
+return res as {notifications: Notification[]};
+}
 
-export const deleteNotification = (token: string, id: string) =>
-  fetcher(`/api/notifications/${id}`, 'DELETE', undefined, token);
-export const deleteAllNotifications = (token: string) =>
-  fetcher('/api/notifications', 'DELETE', undefined, token);
+export const markNotificationRead = (id: string) =>
+  fetcher(`/api/notifications/${id}/read`, 'PATCH', undefined);
+
+export const deleteNotification = ( id: string) =>
+  fetcher(`/api/notifications/${id}`, 'DELETE', undefined);
+export const deleteAllNotifications = () =>
+  fetcher('/api/notifications', 'DELETE', undefined);
