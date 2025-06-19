@@ -15,7 +15,7 @@ interface Product {
   description: string;
 }
 
-export default function MenProductsPage() {
+export default function WomenProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,9 +23,9 @@ export default function MenProductsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchMenProducts = async () => {
+    const fetchWomenProducts = async () => {
       try {
-        const res = await fetcher("/api/products?category=male", "GET");
+        const res = await fetcher("/api/products?category=female", "GET");
         if (Array.isArray(res)) {
           setProducts(res as Product[]);
         } else {
@@ -42,15 +42,15 @@ export default function MenProductsPage() {
       }
     };
 
-    fetchMenProducts();
+    fetchWomenProducts();
   }, []);
 
-  if (loading) return <p className="text-center py-10">Loading men&#39;s products...</p>;
+  if (loading) return <p className="text-center py-10">Loading women&#39;s products...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
     <div className="max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">Men&#39;s Collection</h1>
+      <h1 className="text-3xl font-bold mb-8">Women&#39;s Collection</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((product) => (
           <div

@@ -1,54 +1,29 @@
-import { API_BASE_URL } from './api';
+import { fetcher } from './api';
 
 export const getAllProducts = async () => {
-  const res = await fetch(`${API_BASE_URL}/api/products`);
-  if (!res.ok) throw new Error('Failed to load products');
-  return res.json();
+  const res = await fetcher(`/api/products`, "GET") as Response;
+  return res;
 };
 
 export const getProductById = async (id: string) => {
-  const res = await fetch(`${API_BASE_URL}/api/products/${id}`);
-  if (!res.ok) throw new Error('Product not found');
-  return res.json();
+  const res = await fetcher(`/api/products/${id}`, "GET") as Response;
+  return res;
 };
 
 // multipart upload
-export const createProduct = async (formData: FormData, token: string) => {
-  const res = await fetch(`${API_BASE_URL}/api/products`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
-
-  if (!res.ok) throw new Error('Failed to create product');
-  return res.json();
+export const createProduct = async (formData: FormData) => {
+  const res = await fetcher(`/api/products`, 'POST', formData) as Response;
+  return res;
 };
 export const updateProduct = async (
   id: string,
   formData: FormData,
-  token: string
 ) => {
-  const res = await fetch(`${API_BASE_URL}/api/products/${id}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
-
-  if (!res.ok) throw new Error('Failed to update product');
-  return res.json();
+  const res = await fetcher(`/api/products/${id}`,'PUT',formData,
+  ) as Response;
+  return res;
 };
-export const deleteProduct = async (id: string, token: string) => {
-  const res = await fetch(`${API_BASE_URL}/api/products/${id}`, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) throw new Error('Failed to delete product');
-  return res.json();
+export const deleteProduct = async (id: string) => {
+  const res = await fetcher(`/api/products/${id}`,'DELETE', undefined) as Response;
+  return res;
 };
