@@ -18,13 +18,15 @@ export const createProduct = async (input: CreateProductInput): Promise<Product>
 
 // ✅ Get all products
 export const getAllProducts = async (category?: "male" | "female"): Promise<Product[]> => {
-   let query = "SELECT * FROM products ORDER BY created_at DESC";
+   let query = "SELECT * FROM products";
   const values: any[] = [];
 
   if (category) {
     query += " WHERE category = $1";
     values.push(category);
   }
+
+  query += " ORDER BY created_at DESC";
 
   const result = await pool.query(query, values);
   return result.rows;

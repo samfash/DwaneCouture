@@ -55,12 +55,14 @@ export const authorizeRole = (...allowedRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.user) {
-        return res.status(401).json({ error: "Unauthorized: No user found" });
+        res.status(401).json({ error: "Unauthorized: No user found" });
+        return;
       }
 
       if (!allowedRoles.includes(req.user.role)) {
         logger.warn(`Access denied for user ${req.user.email} with role: ${req.user.role}`);
-        return res.status(403).json({ error: "Forbidden: Insufficient permissions" });
+        res.status(403).json({ error: "Forbidden: Insufficient permissions" });
+        return;
       }
 
       next();
@@ -70,7 +72,8 @@ export const authorizeRole = (...allowedRoles: string[]) => {
       } else {
         logger.error(`Authorization Error: ${String(error)}`);
       }
-      return res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Internal Server Error" });
+      return;
     }
   };
 };

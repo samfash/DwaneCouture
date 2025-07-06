@@ -4,12 +4,12 @@ import { sendEmail } from "../../core/email.service";
 import logger from "../../core/logger";
 import { findUserById } from "../auth/auth.model";
 
-export const createNotificationService = async (userId: string, data: CreateNotificationInput) => {
-  const notification = await createNotification(userId, data);
+export const createNotificationService = async (data: CreateNotificationInput) => {
+  const notification = await createNotification(data);
 
-  const email = await findUserById(userId);
+  const email = await findUserById(data.user_id);
   if (!email) {
-    logger.error("❌ User not found for notification email", { userId });
+    logger.error("❌ User not found for notification email", { userId: data.user_id });
     return notification;
   }
   // ✅ Send email after creating notification

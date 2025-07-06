@@ -12,6 +12,7 @@ import productRoutes from "./modules/product/product.routes";
 import orderRoutes from "./modules/order/order.routes";
 import paymentRoutes from "./modules/payments/payment.routes";
 import notificationRoutes from "./modules/notification/notifications.routes";
+import adminRoutes from "./modules/admin/admin.route";
 import pool from "./core/database";
 import cookieParser from "cookie-parser";
 
@@ -33,6 +34,7 @@ app.use(cookieParser());
 setupSwagger(app);
 
 app.use("/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/profiles", profileRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);

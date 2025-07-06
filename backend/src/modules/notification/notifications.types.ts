@@ -10,6 +10,7 @@ export interface NotificationBase {
 export interface CreateNotificationInput {
     title: string;
     message: string;
+    user_id: string
 }
   
 export interface UpdateNotificationInput {

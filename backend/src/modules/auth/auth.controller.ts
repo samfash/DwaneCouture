@@ -1,6 +1,6 @@
 // src/modules/auth/auth.controller.ts
 import e, { Request, Response } from "express";
-import { registerUser, loginUser, forgotPassword, resetPassword, registerOAuthUser, assignUserRole, refreshTokenService } from "./auth.service";
+import { registerUser, loginUser, forgotPassword, resetPassword, registerOAuthUser, assignUserRole, refreshTokenService, deleteUserService, getAllUsersService } from "./auth.service";
 import { registerValidation, loginValidation, forgotPasswordValidation, resetPasswordValidation, oauthValidation} from "./auth.validation";
 import logger from "../../core/logger";
 import { setTokenCookie } from "../../core/cookie.util";
@@ -156,6 +156,34 @@ export const assignRoleController = async (req: Request, res: Response) => {
     return;
   } catch (err) {
     res.status(500).json({ error: "Failed to update role" });
+    return;
+  }
+};
+
+export const getAllUsersController = async (_req: Request, res: Response) => {
+  try {
+    const users = await getAllUsersService();
+    res.status(200).json(users);
+  } catch (error) {
+    logger.error("❌ GetAllUsersController Error:", error);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+};
+
+// ✅ DELETE /auth/users/:id
+export const deleteUserController = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      res.status(400).json({ error: "User ID is required" });
+      return;
+    }
+    await deleteUserService(id);
+    res.status(200).json({ message: "User deleted successfully" });
+    return;
+  } catch (err) {
+    logger.error("❌ Delete User Error:", err);
+    res.status(500).json({ error: "Server error" });
     return;
   }
 };

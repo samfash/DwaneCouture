@@ -6,7 +6,10 @@ import { createUser,
   updateUserPassword, 
   updateUserResetToken, 
   createOAuthUser,
-  updateUserRole
+  updateUserRole,
+  deleteUserById,
+  findUserById,
+  getAllUsers
 } from "./auth.model";
 import dotenv from "dotenv";
 import config from "../../core/config";
@@ -160,4 +163,16 @@ export const assignUserRole = async (userId: string, role: "admin" | "user" | "t
   return updateUserRole(userId, role);
 };
 
+export const getAllUsersService = async () => {
+  return await getAllUsers();
+};
 
+export const deleteUserService = async (id: string): Promise<void> => {
+   // Check if user exists first
+    const existingUser = await findUserById(id);
+    if (!existingUser) {
+      throw new Error("User not found");
+    }
+
+  await deleteUserById(id);
+};

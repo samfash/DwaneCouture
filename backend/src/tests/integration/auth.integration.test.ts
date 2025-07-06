@@ -3,6 +3,8 @@ import request from "supertest";
 import app from "../../app";
 import pool from "../../core/database";
 import passport from "passport";
+import { v4 as uuidv4 } from "uuid";
+
 
 describe("Auth Integration Tests", () => {
   beforeEach(async() => {
@@ -34,8 +36,8 @@ describe("Auth Integration Tests", () => {
   
   
   let validToken: string;
+  let userId = uuidv4();
   
-
   it("should register a new user and return a JWT token", async () => {
     const response = await request(app)
       .post("/auth/signup")
@@ -163,6 +165,15 @@ describe("Auth Integration Tests", () => {
     expect(response.status).toBe(400);
     expect(response.body.error).toBe("Please log in using OAuth");
   });
+
+  it("should delete a user", async () => {
+  const res = await request(app)
+    .delete(`/auth/users/${userId}`)
+    .set("Authorization", `Bearer ${validToken}`);
+
+  expect(res.status).toBe(200);
+  expect(res.body.message).toBe("User deleted successfully");
+});
 });
 
 

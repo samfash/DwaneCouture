@@ -11,13 +11,7 @@ export const createNotificationController = async (req: Request, res: Response) 
       return ;
     }
 
-    const userId = req.user?.id;
-    if (!userId){ 
-        res.status(401).json({ error: "Unauthorized" });
-        return ;
-    }
-
-    const notification = await createNotificationService(userId, parsed.data);
+    const notification = await createNotificationService(parsed.data);
     res.status(201).json({ notification });
   } catch (error) {
     logger.error(`Create Notification Error: ${(error as Error).message}`);
@@ -27,7 +21,9 @@ export const createNotificationController = async (req: Request, res: Response) 
 
 export const getUserNotificationsController = async (req: Request, res: Response) => {
   try {
-    const userId = req.user?.id;
+    
+    const userId = req.body?.user_id || req.user?.id;
+
     if (!userId){ 
         res.status(401).json({ error: "Unauthorized" });
         return ;
@@ -59,7 +55,7 @@ export const markNotificationAsReadController = async (req: Request, res: Respon
 
 export const deleteNotificationController = async (req: Request, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.body?.user_id || req.user?.id;
     if (!userId){ 
         res.status(401).json({ error: "Unauthorized" });
         return ;

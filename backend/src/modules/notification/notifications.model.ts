@@ -1,10 +1,10 @@
 import pool from "../../core/database";
 import { NotificationBase } from "./notifications.types";
 
-export const createNotification = async (userId: string, data: { title: string; message: string }): Promise<NotificationBase> => {
+export const createNotification = async (data: { title: string; message: string; user_id: string }): Promise<NotificationBase> => {
   const result = await pool.query(
     `INSERT INTO notifications (user_id, title, message) VALUES ($1, $2, $3) RETURNING *`,
-    [userId, data.title, data.message]
+    [data.user_id, data.title, data.message]
   );
   return result.rows[0];
 };

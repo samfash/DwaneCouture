@@ -6,7 +6,10 @@ import { register, login,
     forgotPasswordController, 
     resetPasswordController, 
     googleOAuthCallback, 
-    assignRoleController} from "./auth.controller";
+    assignRoleController,
+    deleteUserController,
+    getAllUsersController
+} from "./auth.controller";
 import passport from "passport";
 import { authenticateJWT, authorizeAdmin } from "../../core/auth.middleware";
 
@@ -166,6 +169,26 @@ router.get('/me', authenticateJWT, (req, res) => {
   res.status(200).json({ id, email, role });
 });
 
+/**  @swagger
+* /auth/users:
+* get:
+*   summary: Get all users
+*   tags:
+*     - Auth
+*   security:
+*     - bearerAuth: []
+*   responses:
+*     200:
+*       description: List of users
+*     401:
+*       description: Unauthorized
+*     500:
+*       description: Server error
+*/
 
+router.get("/users", authenticateJWT, authorizeAdmin, getAllUsersController);
+
+// ✅ DELETE /auth/users/:id - Delete a user by ID (authenticated)
+router.delete("/users/:id", authenticateJWT, deleteUserController);
 
 export default router;

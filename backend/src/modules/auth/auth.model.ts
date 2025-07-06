@@ -79,3 +79,12 @@ export const updateUserRole = async (userId: string, role: "admin" | "user" | "t
   return rows[0];
 };
 
+export const getAllUsers = async (): Promise<User[]> => {
+  const result = await pool.query("SELECT id, email, role, isOAuth FROM users");
+  return result.rows;
+};
+
+export const deleteUserById = async (id: string): Promise<void> => {
+  await pool.query("DELETE FROM users WHERE id = $1", [id]);
+};
+

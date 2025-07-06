@@ -4,6 +4,7 @@ import  logger  from "../../core/logger";
 import { findUserById } from "../auth/auth.model";
 import { sendEmail } from "../../core/email.service";
 import { createNotificationService } from "../notification/notifications.service";
+import { userInfo } from "os";
 
 // ✅ Create Order
 export const createOrderService = async (userId: string, data: CreateOrderInput) => {
@@ -48,10 +49,10 @@ export const updateOrderStatusService = async (orderId: string, status: OrderBas
   const message = `Your order status has been updated to: ${status.toUpperCase()}`;
 
     // ✅ Create notification
-  await createNotificationService(
-    updated.user_id, {
+  await createNotificationService({
     title: "Order Status Updated",
     message,
+    user_id: updated.user_id
   });
 
   return updated;
