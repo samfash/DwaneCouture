@@ -10,6 +10,7 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+    const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { refetch } = useAuth();
@@ -67,13 +68,22 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
 
         <label className="block mb-6">
           <span className="text-gray-700 dark:text-gray-300">Password</span>
+          <div className="relative">
           <input
-            type="password"
+            type={show ? "text":"password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             className="mt-1 w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
           />
+          <button
+            type="button"
+            onClick={() => setShow(!show)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+          >
+          {show ? "🙈" : "👁️"}
+          </button>
+          </div>
         </label>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}

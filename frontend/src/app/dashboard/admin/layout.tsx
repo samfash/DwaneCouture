@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRole } from "@/src/hooks/useRole";
+import { useRoleChecks } from "@/src/hooks/useRole";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -16,7 +16,7 @@ const adminLinks = [
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
- const isAdmin = useRole(["admin"]);
+ const isAdmin = useRoleChecks();
   useEffect(() => {
   if (!isAdmin) router.push("/");
   }, [isAdmin, router]);

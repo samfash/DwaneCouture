@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { fetcher } from "@/src/lib/api";
 
 interface Notification {
@@ -8,18 +9,19 @@ interface Notification {
   title: string;
   message: string;
   created_at: string;
-  type: "alert" | "reminder";
 }
 
 export default function TailorNotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+   const searchParams = useSearchParams();
+  const targetUserId = searchParams.get("user_id");
 
   const [newNotification, setNewNotification] = useState({
     title: "",
     message: "",
-    type: "alert" as "alert" | "reminder",
+    // type: "alert" as "alert" | "reminder",
   });
 
   useEffect(() => {
@@ -42,10 +44,15 @@ export default function TailorNotificationsPage() {
   }, []);
 
   const handleCreate = async () => {
+     const payload = {
+      ...newNotification,
+      ...(targetUserId ? { user_id: targetUserId } : {}),
+    };
     try {
-      const res = await fetcher("/api/notifications", "POST", newNotification);
+      const res = await fetcher("/api/notifications", "POST", payload);
       setNotifications((prev) => [res as Notification, ...prev]);
-      setNewNotification({ title: "", message: "", type: "alert" });
+      setNewNotification({ title: "", message: "" });
+      alert(`Notification sent ${targetUserId ? `to user ${targetUserId}` : 'to yourself'}`);
     } catch (err: unknown) {
       alert(
         "Failed to create notification: " +
@@ -60,6 +67,12 @@ export default function TailorNotificationsPage() {
 
       <div className="p-4 bg-white dark:bg-gray-800 rounded shadow space-y-4">
         <h2 className="text-lg font-semibold">Create New Notification</h2>
+        {targetUserId && (
+          <p className="text-sm text-gray-600">
+            This notification will be sent to user: <span className="font-mono">{targetUserId}</span>
+          </p>
+        )}
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <input
             placeholder="Title"
@@ -67,14 +80,14 @@ export default function TailorNotificationsPage() {
             onChange={(e) => setNewNotification({ ...newNotification, title: e.target.value })}
             className="px-4 py-2 border rounded"
           />
-          <select
+          {/* <select
             value={newNotification.type}
             onChange={(e) => setNewNotification({ ...newNotification, type: e.target.value as "alert" | "reminder" })}
             className="px-4 py-2 border rounded"
           >
             <option value="alert">Alert</option>
             <option value="reminder">Reminder</option>
-          </select>
+          </select> */}
           <textarea
             placeholder="Message"
             value={newNotification.message}
@@ -104,7 +117,8 @@ export default function TailorNotificationsPage() {
               className="p-4 border rounded bg-white dark:bg-gray-900 shadow"
             >
               <p className="text-sm text-gray-500">
-                {new Date(note.created_at).toLocaleDateString()} | <span className="uppercase">{note.type}</span>
+                {new Date(note.created_at).toLocaleDateString()} 
+                {/* | <span className="uppercase">{note.type}</span> */}
               </p>
               <h3 className="text-lg font-semibold">{note.title}</h3>
               <p>{note.message}</p>

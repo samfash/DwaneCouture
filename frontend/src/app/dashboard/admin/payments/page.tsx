@@ -42,7 +42,7 @@ export default function AdminPaymentsPage() {
 
     const fetchUsers = async () => {
       try {
-        const res = await fetcher("/api/users", "GET");
+        const res = await fetcher("/auth/users", "GET");
         const map: Record<string, User> = {};
         (res as User[]).forEach((u) => (map[u.id] = u));
         setUsers(map);

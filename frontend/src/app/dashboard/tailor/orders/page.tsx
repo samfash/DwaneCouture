@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { fetcher } from "@/src/lib/api";
 import Image from "next/image";
+import Link from "next/link";
+
 
 interface Order {
   id: string;
@@ -104,6 +106,10 @@ export default function TailorOrdersPage() {
                     <option value="processing">Processing</option>
                     <option value="completed">Completed</option>
                   </select>
+
+                  <Link href={`/dashboard/tailor/notifications?user_id=${order.user_id}`} className="text-blue-600 hover:underline">
+                    Notify Customer
+                  </Link>
                 </div>
 
                 {product && (

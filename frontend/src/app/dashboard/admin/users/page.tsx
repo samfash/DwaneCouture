@@ -17,7 +17,7 @@ export default function AdminUsersPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetcher("/api/users", "GET");
+        const res = await fetcher("/auth/users", "GET");
         setUsers(res as User[]);
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -34,7 +34,7 @@ export default function AdminUsersPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetcher(`/api/users/${id}`, "DELETE");
+      await fetcher(`/auth/users/${id}`, "DELETE");
       setUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -47,7 +47,7 @@ export default function AdminUsersPage() {
 
   const handleRoleChange = async (id: string, newRole: User["role"]) => {
     try {
-      await fetcher(`/api/users/role/${id}`, "PATCH", { role: newRole });
+      await fetcher(`/auth/users/${id}role/`, "PATCH", { role: newRole });
       setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, role: newRole } : u)));
     } catch (err: unknown) {
       if (err instanceof Error) {
