@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { fetcher } from "@/src/lib/api";
-import Image from "next/image";
 
 interface Product {
   id: string;
@@ -10,15 +9,15 @@ interface Product {
   price: number;
   category: "male" | "female";
   description: string;
-  image_url: string;
+  image: File | null;
 }
 
 export default function TailorProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  // Removed unused error state
   const [newProduct, setNewProduct] = useState<Partial<Product>>({});
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await fetcher("/api/products", "GET");
@@ -32,12 +31,32 @@ export default function TailorProductsPage() {
 
     fetchProducts();
   }, []);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImageFile(file);
+  };
+
   const handleCreate = async () => {
     try {
-      const res = await fetcher("/api/products", "POST", newProduct);
-      setProducts((prev) => [res as Product, ...prev]);
+      if (!imageFile) {
+        alert("Please select an image file");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("name", newProduct.name || "");
+      formData.append("price", String(newProduct.price || ""));
+      formData.append("category", newProduct.category || "");
+      formData.append("description", newProduct.description || "");
+      formData.append("image", imageFile); // 👈 must match `req.file` key on backend
+
+      await fetcher("/api/products", "POST", formData,);
+
+      alert("Product created!");
       setNewProduct({});
-    } catch (err: unknown) {
+      setImageFile(null);
+    } catch (err) {
       if (err instanceof Error) {
         alert("Failed to create product: " + err.message);
       } else {
@@ -89,9 +108,9 @@ export default function TailorProductsPage() {
             <option value="female">Female</option>
           </select>
           <input
-            placeholder="Image URL"
-            value={newProduct.image_url || ""}
-            onChange={(e) => setNewProduct({ ...newProduct, image_url: e.target.value })}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
             className="px-4 py-2 border rounded"
           />
           <textarea
@@ -115,11 +134,6 @@ export default function TailorProductsPage() {
             key={product.id}
             className="border rounded p-4 bg-white dark:bg-gray-900 shadow space-y-2"
           >
-            <Image
-              src={product.image_url}
-              alt={product.name}
-              className="w-full h-40 object-cover rounded"
-            />
             <div>
               <h3 className="font-semibold">{product.name}</h3>
               <p className="text-sm text-gray-500">{product.category}</p>

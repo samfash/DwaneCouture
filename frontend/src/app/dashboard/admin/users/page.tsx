@@ -47,7 +47,7 @@ export default function AdminUsersPage() {
 
   const handleRoleChange = async (id: string, newRole: User["role"]) => {
     try {
-      await fetcher(`/auth/users/${id}role/`, "PATCH", { role: newRole });
+      await fetcher(`/auth/users/${id}/role`, "PATCH", { role: newRole });
       setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, role: newRole } : u)));
     } catch (err: unknown) {
       if (err instanceof Error) {

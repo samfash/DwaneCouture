@@ -16,7 +16,4 @@ export const checkProtected = () =>{
   return fetcher('/protected', 'GET', undefined);}
 
 export const logout = async () =>{
- await fetch("/auth/logout", {
-    method: "POST",
-    credentials: "include",
-  });}
+ return fetcher("/auth/logout","POST");}

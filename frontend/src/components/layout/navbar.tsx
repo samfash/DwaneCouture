@@ -8,7 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter} from "next/navigation";
 import clsx from "clsx";
 import { useAuth } from "@/src/hooks/useAuth";
-import { logout } from "@/src/lib/auth";
+import { fetcher } from "@/src/lib/api";
+// import { logout } from "@/src/lib/auth";
 
 const sections = [
   { name: "Men", href: "/men" },
@@ -51,6 +52,18 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+   const handleLogout = async () => {
+    try {
+      await fetcher("/auth/logout", "POST");
+      await refetch(); 
+
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout error:", err);
+      alert("Logout failed. Please try again.");
+    }
+  };
 
 
   return (
@@ -120,18 +133,15 @@ export default function Navbar() {
                 <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
                   <Link
                     href="/dashboard"
+                    onClick={() => setDropdownOpen(false)}
                     className="block px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Dashboard
                   </Link>
                   <button
-                    onClick={async() => {
-                      console.log("User before logout", user);
-                      await logout();
-                      await refetch();
-                      console.log("User after logout", user);
-                      router.push("/");} // Redirect to login after logout
-                    }
+                    onClick={()=>{
+                      handleLogout();
+                      setDropdownOpen(false);}}
                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Logout
@@ -141,10 +151,10 @@ export default function Navbar() {
             </div>
           ) : (
             <Link
-              href="/register"
+              href="/login"
               className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-full text-sm hover:opacity-90 transition"
             >
-              Sign Up
+              Log in
             </Link>
           )}
 

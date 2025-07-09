@@ -5,12 +5,22 @@ import logger from "../../core/logger";
 
 export const createNotificationController = async (req: Request, res: Response) => {
   try {
+
+    if (!req.body?.user_id) {
+     req.body.user_id = req.user?.id;
+    }
+
+    if (!req.body.user_id) {
+      res.status(401).json({ error: "Unauthorized: No valid user ID" });
+      return;
+    }
+
     const parsed = createNotificationSchema.safeParse(req.body);
     if (!parsed.success) {
       res.status(400).json({ error: parsed.error.errors });
       return ;
     }
-
+    
     const notification = await createNotificationService(parsed.data);
     res.status(201).json({ notification });
   } catch (error) {

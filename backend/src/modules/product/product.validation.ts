@@ -12,6 +12,6 @@ export const updateProductSchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
   category: z.enum(["male", "female"]).optional(),
-  price: z.number().positive().optional(),
+  price: z.coerce.number().positive().optional(),
   image_url: z.string().url().optional(),
 });

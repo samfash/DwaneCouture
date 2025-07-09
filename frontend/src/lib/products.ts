@@ -27,3 +27,8 @@ export const deleteProduct = async (id: string) => {
   const res = await fetcher(`/api/products/${id}`,'DELETE', undefined) as Response;
   return res;
 };
+
+export const getSignedUrl = async (key: string) => {
+  const  data  = await fetcher(`/api/products/get-signed-url/${key}`, 'GET') as { url: string };
+  return data.url;
+}

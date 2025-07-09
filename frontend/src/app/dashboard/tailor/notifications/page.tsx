@@ -28,7 +28,7 @@ export default function TailorNotificationsPage() {
     const fetchNotifications = async () => {
       try {
         const res = await fetcher("/api/notifications", "GET");
-        setNotifications(res as Notification[]);
+        setNotifications((res as { notifications: Notification[] }).notifications);
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
@@ -50,7 +50,10 @@ export default function TailorNotificationsPage() {
     };
     try {
       const res = await fetcher("/api/notifications", "POST", payload);
-      setNotifications((prev) => [res as Notification, ...prev]);
+      const { notification } = res as { notification: Notification };
+
+      console.log("Notification created:", res);
+      setNotifications((prev) => [notification, ...prev]);
       setNewNotification({ title: "", message: "" });
       alert(`Notification sent ${targetUserId ? `to user ${targetUserId}` : 'to yourself'}`);
     } catch (err: unknown) {

@@ -1,51 +1,45 @@
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-export const fetcher = async (
+export const fetcher = async<TResponse> (
   endpoint: string,
   method: string = 'GET',
   body?: unknown,
-): Promise<unknown> => {
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
+): Promise<TResponse> => {
+  const headers: HeadersInit = {};
+
+  if (!(body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   const res = await fetch(`${API_BASE_URL}${endpoint}`, {
     method,
     headers,
-    body: body ? JSON.stringify(body) : undefined,
+    body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
     credentials: 'include',
   });
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
+  let data: unknown;
+  try {
+    data = await res.json();
+  } catch {
+    data = {};
+  }
 
-    // const formattedError =
-    //   Array.isArray(err)
-    //     ? JSON.stringify(err, null, 2)
-    //     : err.error || err.message || 'Unknown error';
+    if (!res.ok) {
+      if (Array.isArray(data)) {
+        throw new Error(data.map((e) => e.message).join('\n'));
+      }
 
-    // throw new Error(formattedError);
+       if (data && typeof data === "object" && "errors" in data) {
+        throw new Error((data.errors as { message: string }[]).map((e) => e.message).join('\n'));
+      }
 
-    if (Array.isArray(err)) {
-    const messages = err.map((e) => e.message).join('\n');
-    console.error("test 1 ",messages);
-    throw new Error(messages);
+      if (typeof data === "object" && data !== null) {
+        throw new Error((data as { message?: string; error?: string }).message || "Unknown error");
+      }
+
+      throw new Error("An unknown error occurred");
     }
 
-     if (err?.errors && Array.isArray(err.errors)) {
-    type ErrorItem = { message: string };
-    const messages = err.errors.map((e: ErrorItem) => e.message).join('\n');
-    throw new Error(messages);
-  }
-
-  if (typeof err === "object" && err !== null) {
-    const message = err.message || err.error || "Unknown error";
-    throw new Error(message);
-  }
-
-    throw new Error("An unknown error occurred");
-  }
-  console.log("test 3 ",res.status, res.statusText);
-  return res.json();
-
+  return data as TResponse;
 };

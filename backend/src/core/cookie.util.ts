@@ -5,6 +5,6 @@ export const setTokenCookie = (res: Response, token: string) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", // Only over HTTPS in prod
     sameSite: "lax", // Helps mitigate CSRF
-    maxAge: 15 * 60 * 1000, // 15 minutes
+    maxAge: 60 * 60 * 1000, // 15 minutes
   });
 };

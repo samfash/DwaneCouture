@@ -12,9 +12,11 @@ import { uploadToS3, generateSignedUrl } from "../../core/s3Uploader";
 
 export const createProductController = async (req: Request, res: Response) => {
   try {
+    console.log("Received init:", req.body);
     const image_url = req.file ? await uploadToS3(req.file) : undefined;
     req.body.image_url = image_url || ""; // Provide a default empty string if image_url is undefined
 
+    console.log("Received body:", req.body);
     const validated = createProductSchema.parse({
       ...req.body,
       price: Number(req.body.price),

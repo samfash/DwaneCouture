@@ -70,7 +70,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
 };
 
 export const logoutController = async (req: Request, res: Response) => {
-  res.clearCookie("token", {
+  res.clearCookie("access_token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

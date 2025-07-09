@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { fetcher } from "@/src/lib/api";
 import { useCart } from "@/src/hooks/cartStore";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import SignedImage from "@/src/ui/s3SignedUrl";
 
 interface Product {
   id: string;
@@ -57,8 +57,8 @@ export default function MenProductsPage() {
             key={product.id}
             className="group relative border rounded-lg shadow hover:shadow-lg transition overflow-hidden bg-white dark:bg-gray-900"
           >
-            <Image
-              src={product.image_url}
+            <SignedImage
+              s3Url={product.image_url}
               alt={product.name}
               className="w-full h-64 object-cover group-hover:opacity-75"
             />
