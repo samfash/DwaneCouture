@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signup, login } from "@/src/lib/auth"; // Adjust the import based on your auth functions
 import { useAuth } from "@/src/hooks/useAuth";
+import GoogleForm from "./googleAuth";
 
 export default function AuthForm({ type }: { type: "login" | "register" }) {
   const router = useRouter();
@@ -95,6 +96,8 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
         >
           {loading ? "Please wait..." : type === "login" ? "Login" : "Register"}
         </button>
+
+        <GoogleForm />
 
         <p className="mt-4 text-sm text-gray-600 dark:text-gray-400 text-center">
           {type === "login" ? (

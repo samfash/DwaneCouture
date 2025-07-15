@@ -145,6 +145,6 @@ router.patch("/:id", upload.single("image"), updateProductController);
  */
 router.delete("/:id", deleteProductController);
 
-router.get("/get-signed-url/:key", getSignedUrlController);
+router.get("/get-signed-url/:key(*)", getSignedUrlController);
 
 export default router;

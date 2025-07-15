@@ -26,6 +26,7 @@ export const fetcher = async<TResponse> (
   }
 
     if (!res.ok) {
+
       if (Array.isArray(data)) {
         throw new Error(data.map((e) => e.message).join('\n'));
       }

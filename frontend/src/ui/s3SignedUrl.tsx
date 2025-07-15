@@ -14,14 +14,18 @@ const SignedImage: React.FC<SignedImageProps> = ({ s3Url, alt, className }) => {
   const [hasError, setHasError] = useState<boolean>(false); // Error state
 
   useEffect(() => {
+    if (!s3Url) {
+    console.warn("SignedImage: s3Url is missing — skipping fetchSignedUrl.");
+    return;
+  }
     const fetchSignedUrl = async () => {
       try {
         setIsLoading(true);
         setHasError(false);
 
-        const fileKey = s3Url.split("/").pop(); // Extract key from URL
-        if (!fileKey) throw new Error("Invalid S3 URL format.");
+        const fileKey = s3Url.split(".amazonaws.com/")[1]; // Extract key from URL
 
+        if (!fileKey) throw new Error("Invalid S3 URL format.");
         const url = await getSignedUrl(fileKey); // Fetch signed URL
         setSignedUrl(url); // Update signed URL state
       } catch (error) {

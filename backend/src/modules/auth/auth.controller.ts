@@ -131,7 +131,9 @@ export const googleOAuthCallback = async (req: Request, res: Response) => {
 
   try {
     const { token, user } = await registerOAuthUser(validatedData);
-    res.redirect(`http://localhost:3000?token=${token}&email=${user.email}`);
+    setTokenCookie(res, token); // ✅ Set cookie
+    // http://localhost:3000?token=${token}&email=${user.email}
+    res.redirect(`http://localhost:3000`);
     return;
   } catch (error) {
     logger.error(`OAuth Error: ${(error as Error).message}`);

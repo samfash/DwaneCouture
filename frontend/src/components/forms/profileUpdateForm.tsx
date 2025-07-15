@@ -6,7 +6,17 @@ import { fetcher } from "@/src/lib/api";
 import { getProfile, updateProfile } from "@/src/lib/profile";
 import { useAuth } from "@/src/hooks/useAuth";
 
-export default function ProfileUpdateForm() {
+type ProfileUpdateFormProps = {
+  initProf: {
+    id: string;
+    full_name: string;
+    gender: string;
+    delivery_address: string;
+    // add other profile fields as needed
+  };
+};
+
+export default function ProfileUpdateForm(props: ProfileUpdateFormProps) {
   const router = useRouter();
   const { user, loading: authLoading, error: authError } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -14,12 +24,7 @@ export default function ProfileUpdateForm() {
   const [editing, setEditing] = useState(false);
 
 
-  const [profile, setProfile] = useState({
-    id: "",
-    full_name: "",
-    gender: "male",
-    delivery_address: "",
-  });
+  const [profile, setProfile] = useState(props.initProf);
 
   const [measurements, setMeasurements] = useState<Record<string, number | undefined>>({});
 

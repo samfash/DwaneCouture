@@ -32,7 +32,7 @@ export const resetPasswordValidation = z.object({
 });
 
 export const oauthValidation = z.object({
-  id: z.string().uuid("Invalid user ID format"),
+  id: z.string().min( 1, "Invalid user ID format"),
   email: z.string().email("Invalid email format"),
 });
 
