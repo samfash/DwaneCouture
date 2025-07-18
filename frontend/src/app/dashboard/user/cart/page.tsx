@@ -2,9 +2,16 @@
 
 import { useCart } from "@/src/hooks/cartStore";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
-  const { items, removeItem, clearCart } = useCart();
+  const router = useRouter();
+  const { items, removeItem, clearCart, updateQuantity } = useCart();
+
+  const handleCheckout = () => {
+    router.push(`/checkout?product=${items}`);
+  };
+
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -34,7 +41,17 @@ export default function CartPage() {
                 className="p-4 bg-white dark:bg-gray-800 rounded shadow border border-gray-200 dark:border-gray-700"
               >
                 <p><strong>Product:</strong> {item.product_name}</p>
-                <p><strong>Quantity:</strong> {item.quantity}</p>
+                <div className="flex items-center space-x-2 mt-2">
+                  <label htmlFor={`qty-${item.id}`} className="font-medium">Quantity:</label>
+                  <input
+                    id={`qty-${item.id}`}
+                    type="number"
+                    min={1}
+                    value={item.quantity}
+                    onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
+                    className="w-16 px-2 py-1 border rounded"
+                  />
+                </div>
                 <p><strong>Price:</strong> ${item.price}</p>
                 <p><strong>Saved on:</strong> {new Date(item.saved_at).toLocaleDateString()}</p>
                 <button
@@ -47,8 +64,14 @@ export default function CartPage() {
             ))}
           </ul>
 
-          <div className="pt-4 border-t flex justify-between items-center">
-            <p className="text-lg font-semibold">Total: ${total.toFixed(2)}</p>
+          <div className="border-t pt-4" >
+          <p className="text-lg font-semibold">Total: ${total.toFixed(2)}</p>
+          </div>
+
+          <div className="pt-2 flex justify-between items-center">
+             <button onClick={handleCheckout} className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl">
+              Proceed to Checkout
+            </button>
             <button
               onClick={clearCart}
               className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"

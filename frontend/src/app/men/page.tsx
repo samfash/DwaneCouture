@@ -90,14 +90,7 @@ export default function MenProductsPage() {
               </button>
               <button
                 onClick={() => {
-                  addItem({
-                    id: product.id,
-                    product_name: product.name,
-                    quantity: 1,
-                    price: product.price,
-                    saved_at: new Date().toISOString(),
-                  });
-                  router.push("/checkout");
+                  router.push(`/checkout?items=${encodeURIComponent(JSON.stringify([{ id: product.id, quantity: 1 }]))}`);
                 }}
                 className="px-4 py-1 text-sm bg-green-600 text-white rounded shadow hover:bg-green-700"
               >

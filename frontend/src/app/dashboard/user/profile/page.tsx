@@ -1,32 +1,35 @@
+"use client";
+
 import ProfileUpdateForm from "@/src/components/forms/profileUpdateForm";
 import { getProfile } from '@/src/lib/profile'; // Example helper to fetch from DB
 import { useAuth } from "@/src/hooks/useAuth";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+type ProfileType = {
+  id: string;
+  full_name: string;
+  gender: string;
+  delivery_address: string;
+};
 
 export default function EditProfilePage() {
     const { user, loading: authLoading} = useAuth();
-    const [profile, setProfile] = useState({
-    id: "",
-    full_name: "",
-    gender: "male",
-    delivery_address: "",
-  });
+    const [profile, setProfile] = useState<ProfileType | null>(null);
       
      useEffect(() => {
     if (!user || authLoading) return;
 
     const fetchProfile = async () => {
       try {
-        const res = await getProfile(user.id) as { profile: typeof profile };
+        const res = await getProfile(user.id) as { profile?: typeof profile};
         if(res?.profile){
           setProfile(res.profile);
         };
       } catch (error) {
           const errMsg = error instanceof Error ? error.message : "An unexpected error occurred.";
-          console.error("Error fetching profile:", errMsg);
-      }
+          console.log("Error fetching profile:", errMsg);}
+          setProfile(null);
     };
 
     fetchProfile();
