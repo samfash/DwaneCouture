@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/src/hooks/useAuth";
-import { useRoleChecks } from "@/src/hooks/useRole";
+import { useAuth } from "@/src/lib/hooks/useAuth";
+import { useRoleChecks } from "@/src/lib/hooks/useRole";
 
 export default function DashboardPage() {
   const router = useRouter();

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetcher } from "@/src/lib/api";
-import {MetricCard} from "@/src/ui/metricCard";
+import {MetricCard} from "@/src/components/ui/metricCard";
 
 type Metrics = {
   totalUsers?: number;

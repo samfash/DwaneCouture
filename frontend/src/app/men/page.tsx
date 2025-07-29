@@ -1,19 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetcher } from "@/src/lib/api";
-import { useCart } from "@/src/hooks/cartStore";
+import { useCart } from "@/src/store/cartStore";
 import { useRouter } from "next/navigation";
-import SignedImage from "@/src/ui/s3SignedUrl";
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image_url: string;
-  category: string;
-  description: string;
-}
+import SignedImage from "@/src/components/product/s3SignedUrl";
+import { getAllProducts } from "@/src/lib/api/api-v2/products_v2";
+import { Product } from "@/src/types/products";
 
 export default function MenProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -25,18 +17,16 @@ export default function MenProductsPage() {
   useEffect(() => {
     const fetchMenProducts = async () => {
       try {
-        const res = await fetcher("/api/products?category=male", "GET");
-        if (Array.isArray(res)) {
-          setProducts(res as Product[]);
-        } else {
-          setError("Failed to load products.");
+        const res = await getAllProducts('male');
+        console.log("the response is ", res);
+        
+        if (!res || !Array.isArray(res)) {
+          throw new Error('Invalid response format');
         }
+        setProducts(res);
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("An unknown error occurred.");
-        }
+        const message = err instanceof Error ? err.message : 'An unknown error occurred.';
+        setError(message);
       } finally {
         setLoading(false);
       }

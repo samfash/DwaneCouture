@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetcher } from "@/src/lib/api";
+import { fetcher } from "@/src/lib/api/api-v2/api_v2";
 
 export interface AuthUser {
   id: string;
@@ -20,7 +20,7 @@ export function useAuth(): AuthState & { refetch: () => Promise<void> } {
 
   const fetchUser = async () => {
       try {
-        const userData = await fetcher("/auth/me", "GET");
+        const userData = await fetcher.get("/auth/me");
         setUser(userData as AuthUser);
       } catch (err) {
         setUser(null);

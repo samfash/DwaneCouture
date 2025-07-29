@@ -1,4 +1,4 @@
-import ProfileForm from "@/src/components/forms/profileForm";
+import ProfileForm from "@/src/components/profile/profileForm";
 
 export default function CreateProfilePage() {
   return (

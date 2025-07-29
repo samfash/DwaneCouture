@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { fetcher } from "@/src/lib/api";
-import { useAuth } from "@/src/hooks/useAuth";
+import { fetcher } from "@/src/lib/api/api-v1/api";
+import { useAuth } from "@/src/lib/hooks/useAuth";
 
 
 export default function ProfileForm() {

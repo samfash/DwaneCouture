@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProfile } from "@/src/lib/profile";
-import { useAuth } from "@/src/hooks/useAuth";
+import { getProfile } from "@/src/lib/api/api-v1/profile";
+import { useAuth } from "@/src/lib/hooks/useAuth";
 
 export default function ProfilePage() {
   const { user } = useAuth();

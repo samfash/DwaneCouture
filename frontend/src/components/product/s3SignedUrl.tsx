@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image"; // Using Next.js Image component for optimized images
-import { getSignedUrl } from "@/src/lib/products"; // Function to fetch signed URLs
+import { getSignedUrl } from "@/src/lib/api/api-v2/products_v2"; // Function to fetch signed URLs
 
 interface SignedImageProps {
   s3Url: string; // The URL or key from S3

@@ -1,19 +1,11 @@
-import { getProductById } from "@/src/lib/products";
+import { getProductById } from "@/src/lib/api/api-v2/products_v2";
 import { notFound } from "next/navigation";
-import ProductDetails from "@/src/ui/ProductDetails";
+import ProductDetails from "@/src/components/product/ProductDetails";
+import { Product } from "@/src/types/products";
 
-type Props = { params: { id: string } };
+type Props = { id: string };
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image_url: string;
-  category: string;
-  description: string;
-}
-
-export default async function ProductPage({ params }: Props) {
+export default async function ProductPage( params: Props) {
   const param = await params;
   const res = await getProductById(param.id) as unknown;
   const product = res ? (res as Product) : null;

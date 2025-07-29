@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import SignedImage from "@/src/ui/s3SignedUrl";
+import SignedImage from "@/src/components/product/s3SignedUrl";
 import { useState } from "react";
-import { useCart } from "@/src/hooks/cartStore";
+import { useCart } from "@/src/store/cartStore";
 
 type Product = {
   id: string;

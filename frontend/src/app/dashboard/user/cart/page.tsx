@@ -1,6 +1,6 @@
 "use client";
 
-import { useCart } from "@/src/hooks/cartStore";
+import { useCart } from "@/src/store/cartStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -9,9 +9,8 @@ export default function CartPage() {
   const { items, removeItem, clearCart, updateQuantity } = useCart();
 
   const handleCheckout = () => {
-    router.push(`/checkout?product=${items}`);
+    router.push(`/checkout?items=${encodeURIComponent(JSON.stringify(items))}`);
   };
-
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 

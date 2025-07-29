@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuth } from "@/src/lib/hooks/useAuth";
 import { fetchNotifications } from "@/src/lib/notifications";
 
 type Notification = {

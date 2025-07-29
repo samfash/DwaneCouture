@@ -1,8 +1,8 @@
 "use client";
 
-import ProfileUpdateForm from "@/src/components/forms/profileUpdateForm";
+import ProfileUpdateForm from "@/src/components/profile/profileUpdateForm";
 import { getProfile } from '@/src/lib/profile'; // Example helper to fetch from DB
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuth } from "@/src/lib/hooks/useAuth";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 

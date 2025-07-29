@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { createAdminUser } from "../src/modules/admin/createAdminUser";
+import { createAdminUser } from "../modules/admin/createAdminUser";
 
 (async () => {
   const user = await createAdminUser(

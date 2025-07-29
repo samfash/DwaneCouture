@@ -7,9 +7,8 @@ import { Moon, Sun, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname, useRouter} from "next/navigation";
 import clsx from "clsx";
-import { useAuth } from "@/src/hooks/useAuth";
-import { fetcher } from "@/src/lib/api";
-// import { logout } from "@/src/lib/auth";
+import { useAuth } from "@/src/lib/hooks/useAuth";
+import { logout } from "@/src/lib/api/api-v2/auth_v2";
 
 const sections = [
   { name: "Men", href: "/men" },
@@ -55,10 +54,10 @@ export default function Navbar() {
 
    const handleLogout = async () => {
     try {
-      await fetcher("/auth/logout", "POST");
+      await logout();
       await refetch(); 
 
-      router.push("/login");
+      router.push("/auth/login");
     } catch (err) {
       console.error("Logout error:", err);
       alert("Logout failed. Please try again.");
@@ -151,7 +150,7 @@ export default function Navbar() {
             </div>
           ) : (
             <Link
-              href="/login"
+              href="/auth/login"
               className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-full text-sm hover:opacity-90 transition"
             >
               Log in

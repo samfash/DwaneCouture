@@ -1,19 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetcher } from "@/src/lib/api";
-import { useCart } from "@/src/hooks/cartStore";
+import { useCart } from "@/src/store/cartStore";
 import { useRouter } from "next/navigation";
+import { getAllProducts } from "@/src/lib/api/api-v2/products_v2";
+import { Product } from "@/src/types/products";
 import Image from "next/image";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image_url: string;
-  category: string;
-  description: string;
-}
 
 export default function WomenProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -25,21 +18,18 @@ export default function WomenProductsPage() {
   useEffect(() => {
     const fetchWomenProducts = async () => {
       try {
-        const res = await fetcher("/api/products?category=female", "GET");
-        if (Array.isArray(res)) {
-          setProducts(res as Product[]);
-        } else {
-          setError("Failed to load products.");
-        }
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("An unknown error occurred.");
-        }
-      } finally {
-        setLoading(false);
-      }
+              const res = await getAllProducts("female");
+              
+              if (!res || !Array.isArray(res)) {
+                throw new Error('Invalid response format');
+              }
+              setProducts(res);
+            } catch (err: unknown) {
+              const message = err instanceof Error ? err.message : 'An unknown error occurred.';
+              setError(message);
+            } finally {
+              setLoading(false);
+            }
     };
 
     fetchWomenProducts();
@@ -97,7 +87,7 @@ export default function WomenProductsPage() {
                     price: product.price,
                     saved_at: new Date().toISOString(),
                   });
-                  router.push("/checkout");
+                  router.push(`/checkout?items=${encodeURIComponent(JSON.stringify([{ id: product.id, quantity: 1 }]))}`);
                 }}
                 className="px-4 py-1 text-sm bg-green-600 text-white rounded shadow hover:bg-green-700"
               >

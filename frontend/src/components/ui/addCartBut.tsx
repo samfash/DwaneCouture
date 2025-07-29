@@ -1,4 +1,4 @@
-import { useCart } from "@/src/hooks/cartStore";
+import { useCart } from "@/src/store/cartStore";
 
 interface Product {
   id: string | number;

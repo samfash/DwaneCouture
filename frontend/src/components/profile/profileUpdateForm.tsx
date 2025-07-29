@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetcher } from "@/src/lib/api";
-import { getProfile, updateProfile } from "@/src/lib/profile";
-import { useAuth } from "@/src/hooks/useAuth";
+import { fetcher } from "@/src/lib/api/api-v1/api";
+import { getProfile, updateProfile } from "@/src/lib/api/api-v1/profile";
+import { useAuth } from "@/src/lib/hooks/useAuth";
 
 type ProfileUpdateFormProps = {
   initProf: {

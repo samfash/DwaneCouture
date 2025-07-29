@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetcher } from "@/src/lib/api";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuth } from "@/src/lib/hooks/useAuth";
 import Link from "next/link";
 
 type Order = {

@@ -8,7 +8,7 @@ interface Notification {
 }
 
 export const createNotification = (title: string, message: string) =>{
-  return fetcher('/api/notifications', 'POST', { title, message });}
+  fetcher('/api/notifications', 'POST', { title, message });}
 
 export const fetchNotifications =  async (): Promise<{notifications: Notification[]}> =>{
  const res = await fetcher('/api/notifications', 'GET', undefined);

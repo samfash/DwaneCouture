@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signup, login } from "@/src/lib/auth"; // Adjust the import based on your auth functions
-import { useAuth } from "@/src/hooks/useAuth";
+import { signup, login } from "@/src/lib/api/api-v2/auth_v2"; // Adjust the import based on your auth functions
+import { useAuth } from "@/src/lib/hooks/useAuth";
 import GoogleForm from "./googleAuth";
 
 export default function AuthForm({ type }: { type: "login" | "register" }) {
@@ -24,7 +24,7 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
     
     try {
       const endpoint = type === "login" ? login : signup;
-      await endpoint(email, password);
+      await endpoint({email, password});
 
       await refetch();
 
@@ -36,7 +36,6 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.log(err.message);
         setError(err.message);
       } else {
         setError("An unexpected error occurred.");

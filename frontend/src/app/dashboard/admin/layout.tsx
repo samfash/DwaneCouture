@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRoleChecks } from "@/src/hooks/useRole";
+import { useRoleChecks } from "@/src/lib/hooks/useRole";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
