@@ -14,10 +14,10 @@ export default function Home() {
         transition={{ duration: 0.7 }}
         className="max-w-2xl"
       >
-        <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6">
+        <h1 className="text-4xl md:text-6xl font-extrabold text-foreground leading-tight mb-6">
           Tailoring Redefined<br /> for You.
         </h1>
-        <p className="text-gray-700 dark:text-gray-300 text-lg md:text-xl mb-8">
+        <p className="text-foreground dark:text-foreground text-lg md:text-xl mb-8">
           Discover perfectly-fitted fashion, powered by AI and personal craftsmanship.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

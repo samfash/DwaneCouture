@@ -19,7 +19,7 @@ export const createProduct = (formData: FormData) =>
 
 // Update product
 export const updateProduct = (id: string, formData: FormData) =>
-  fetcher.put<Product>(`/api/products/${id}`, formData);
+  fetcher.patch<Product>(`/api/products/${id}`, formData);
 
 // Delete product
 export const deleteProduct = (id: string) =>

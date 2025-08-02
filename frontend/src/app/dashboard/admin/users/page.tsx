@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetcher } from "@/src/lib/api";
+import { fetcher } from "@/src/lib/api/api-v2/api_v2";
 
 interface User {
   id: string;
@@ -17,7 +17,7 @@ export default function AdminUsersPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetcher("/auth/users", "GET");
+        const res = await fetcher.get("/auth/users");
         setUsers(res as User[]);
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -34,7 +34,7 @@ export default function AdminUsersPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetcher(`/auth/users/${id}`, "DELETE");
+      await fetcher.delete(`/auth/users/${id}`);
       setUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -47,7 +47,7 @@ export default function AdminUsersPage() {
 
   const handleRoleChange = async (id: string, newRole: User["role"]) => {
     try {
-      await fetcher(`/auth/users/${id}/role`, "PATCH", { role: newRole });
+      await fetcher.patch(`/auth/users/${id}/role`,{ role: newRole });
       setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, role: newRole } : u)));
     } catch (err: unknown) {
       if (err instanceof Error) {

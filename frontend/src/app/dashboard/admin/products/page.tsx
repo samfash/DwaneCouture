@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetcher } from "@/src/lib/api";
+import { fetcher } from "@/src/lib/api/api-v2/api_v2";
 import { useRouter } from "next/navigation";
+import { getAllProducts, deleteProduct } from "@/src/lib/api/api-v2/products_v2";
 
 interface Product {
   id: string;
@@ -24,8 +25,8 @@ export default function AdminProductsPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetcher("/api/products", "GET");
-        setProducts(res as Product[]);
+        const res = await getAllProducts();
+        setProducts(res);
       } catch (err: unknown) {
           setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
@@ -50,7 +51,7 @@ export default function AdminProductsPage() {
 
   const handleSave = async (id: string) => {
     try {
-      const res = await fetcher(`/api/products/${id}`, "PATCH", editedProduct);
+      const res = await fetcher.patch(id, editedProduct);
       setProducts((prev) => prev.map((p) => (p.id === id ? (res as Product) : p)));
       setEditingProductId(null);
       setEditedProduct({});
@@ -61,7 +62,7 @@ export default function AdminProductsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetcher(`/api/products/${id}`, "DELETE");
+      await deleteProduct(id);
       setProducts((prev) => prev.filter((p) => p.id !== id));
       if (editingProductId === id) {
         setEditingProductId(null);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetcher } from "@/src/lib/api";
+import { fetcher } from "@/src/lib/api/api-v2/api_v2";
 import {MetricCard} from "@/src/components/ui/metricCard";
 
 type Metrics = {
@@ -19,7 +19,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const fetchDashboardMetrics = async () => {
       try {
-        const res = await fetcher("/api/admin/metrics", "GET");
+        const res = await fetcher.get("/api/admin/metrics");
         setMetrics(res as Metrics);
       } catch (err: unknown) {
         if (err instanceof Error) {

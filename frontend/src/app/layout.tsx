@@ -138,7 +138,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex flex-col items-center justify-items-center min-h-screen gap-16 p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+        <div className="flex flex-col items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
         <Navbar />
          <main className="flex-1 gap-[32px] sm:items-start">{children}</main>
         <Footer />

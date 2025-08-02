@@ -108,7 +108,8 @@
 "use client";
 
 import { useState, ChangeEvent } from "react";
-import { fetcher } from "@/src/lib/api";
+// import { fetcher } from "@/src/lib/api/api-v2/api_v2";
+import { createProduct } from "@/src/lib/api/api-v2/products_v2";
 
 export default function TailorProductsPage() {
   const [name, setName] = useState("");
@@ -131,7 +132,7 @@ export default function TailorProductsPage() {
     formData.append("image", imageFile); // ✅ matches multer.single("image")
 
     try {
-      await fetcher("/api/products", "POST", formData);
+      await createProduct( formData);
       
         alert("Product created!");
         // Reset form
