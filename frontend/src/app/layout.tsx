@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "../components/layout/navbar";
+import Navigation from "@/src/components/layout/Navigation";
 import Footer from "../components/layout/footer";
 
 
@@ -139,7 +139,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex flex-col items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
-        <Navbar />
+        <Navigation />
          <main className="flex-1 gap-[32px] sm:items-start">{children}</main>
         <Footer />
         </div>

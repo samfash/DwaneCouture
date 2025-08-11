@@ -1,28 +1,173 @@
-@import "tailwindcss";
+/* globals.css or styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Tailoring Web App Design System - Elegant & Sophisticated */
 
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
-}
-
-/* @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
+    /* Core Colors - Vintage Palette with Better Consistency */
+    --background: 0 0% 100%;
+    --foreground: 115 29% 24%; /* Dark forest green */
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+    --card: 0 0% 100%;
+    --card-foreground: 115 29% 24%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 115 29% 24%;
+
+    /* Primary - Dark Forest Green */
+    --primary: 115 29% 24%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 93 23% 45%;
+    --primary-lighter: 93 23% 75%;
+
+    /* Secondary - Sage Green */
+    --secondary: 93 23% 45%;
+    --secondary-foreground: 0 0% 100%;
+    --gold: 43 100% 57%;
+    --gold-light: 46 100% 95%;
+
+    /* Accent - Vintage Cream Tones */
+    --accent: 46 100% 95%;
+    --accent-foreground: 115 29% 24%;
+    --warm-beige: 46 100% 85%;
+    --warm-brown: 115 29% 24%;
+
+    /* Neutral Grays - Vintage */
+    --muted: 46 50% 85%;
+    --muted-foreground: 93 15% 40%;
+    --border: 46 50% 80%;
+    --input: 46 50% 80%;
+    --ring: 115 29% 24%;
+
+    /* Status Colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-gold: linear-gradient(135deg, hsl(var(--gold)), hsl(45 94% 65%));
+    --gradient-elegant: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--warm-brown)) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.2);
+    --shadow-gold: 0 4px 20px hsl(var(--gold) / 0.3);
+    --shadow-soft: 0 2px 10px hsl(220 13% 69% / 0.1);
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 115 20% 8%; /* Very dark forest green */
+    --foreground: 46 100% 95%; /* Warm cream text */
+
+    --card: 115 15% 12%; /* Slightly lighter dark green */
+    --card-foreground: 46 100% 95%;
+
+    --popover: 115 15% 12%;
+    --popover-foreground: 46 100% 95%;
+
+    /* Primary - Gold accent for dark mode */
+    --primary: 46 100% 95%;
+    --primary-foreground: 115 20% 8%; /* Dark green text on gold */
+    --primary-light: 45 94% 65%;
+    --primary-lighter: 46 100% 85%;
+
+    /* Secondary - Medium green */
+    --secondary: 93 20% 25%; /* Dark sage green */
+    --secondary-foreground: 46 100% 95%;
+    --gold: 43 100% 57%;
+    --gold-light: 46 100% 90%;
+
+    /* Accent - Warm brown tones */
+    --accent: 30 15% 20%; /* Dark warm brown */
+    --accent-foreground: 46 100% 95%;
+    --warm-beige: 46 50% 25%; /* Dark beige */
+    --warm-brown: 30 15% 15%; /* Very dark brown */
+
+    /* Muted colors */
+    --muted: 115 10% 18%; /* Dark muted green */
+    --muted-foreground: 46 30% 70%; /* Muted cream */
+
+    /* Status colors */
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 46 100% 95%;
+    --success: 142 50% 35%;
+    --success-foreground: 46 100% 95%;
+
+    --border: 115 10% 22%; /* Subtle green border */
+    --input: 115 10% 22%;
+    --ring: 43 100% 57%; /* Gold ring focus */
+    
+    /* dark blue concept */
+    /* --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%; */
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  body {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+
