@@ -77,8 +77,8 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Scissors className="h-8 w-8 text-gold" />
-              <span className="text-2xl font-playfair font-bold">Heritage Tailoring</span>
+              <Scissors className="h-8 w-8 -rotate-90 text-background" />
+              <span className="text-2xl font-playfair font-bold">Dwane Couture</span>
             </div>
             <p className="text-primary-foreground/80 font-inter leading-relaxed">
               Crafting exceptional garments, home textiles, and curtains with vintage techniques and timeless elegance since 1895.

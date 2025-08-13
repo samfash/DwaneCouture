@@ -82,7 +82,7 @@
 
   .dark {
     --background: 115 20% 8%; /* Very dark forest green */
-    --foreground: 46 100% 95%; /* Warm cream text */
+    --foreground: 46 100% 95%; /*Warm cream text*/
 
     --card: 115 15% 12%; /* Slightly lighter dark green */
     --card-foreground: 46 100% 95%;

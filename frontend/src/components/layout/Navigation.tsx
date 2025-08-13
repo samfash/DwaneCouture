@@ -91,7 +91,7 @@ const Navigation = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
            className="flex items-center gap-2">
-            <Scissors className="h-8 w-8 text-gold" />
+            <Scissors className="h-8 w-8 -rotate-90 text-primary" />
             <span className="text-2xl font-playfair font-bold text-primary">
               <Link href="/">DwaneCouture</Link>
             </span>
