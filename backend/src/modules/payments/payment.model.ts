@@ -18,7 +18,7 @@ export const createPayment = async (
       userId,
       data.payment_method,
       paymentReference,
-      data.amount,
+      data.total_amount,
       data.currency || "usd",
     ]
   );

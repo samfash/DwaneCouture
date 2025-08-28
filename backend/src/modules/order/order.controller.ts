@@ -7,13 +7,13 @@ import {
   deleteOrderService,
 } from "./order.service";
 
-import { createOrderSchema, updateOrderStatusSchema } from "./order.validation";
+import { CreateOrderSchema, updateOrderStatusSchema } from "./order.validation";
 import logger from "../../core/logger";
 
 // ✅ Create a new Order
 export const createOrderController = async (req: Request, res: Response) => {
   try {
-    const parsed = createOrderSchema.safeParse(req.body);
+    const parsed = CreateOrderSchema.safeParse(req.body);
     if (!parsed.success) {
       res.status(400).json({ error: parsed.error.errors });
       return ;

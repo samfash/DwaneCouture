@@ -20,6 +20,7 @@ export const createPaymentController = async (req: Request, res: Response) => {
   try {
     const parsed = createPaymentSchema.safeParse(req.body);
     if (!parsed.success) {
+      console.log(parsed.error);
       res.status(400).json({ error: parsed.error.errors });
       return ;
     }

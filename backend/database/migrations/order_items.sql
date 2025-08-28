@@ -18,5 +18,5 @@ ALTER TABLE orders
 ALTER COLUMN total_amount SET DEFAULT 0;
 
 -- (Optional) later you can drop these:
--- ALTER TABLE orders DROP COLUMN deprecated_product_id, DROP COLUMN deprecated_quantity;
+ALTER TABLE orders DROP COLUMN deprecated_product_id, DROP COLUMN deprecated_quantity;
 

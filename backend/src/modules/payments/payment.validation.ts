@@ -3,7 +3,7 @@ import { z } from "zod";
 export const createPaymentSchema = z.object({
   order_id: z.string().uuid(),
   payment_method: z.enum(["stripe", "paystack", "flutterwave"]),
-  amount: z.number().positive(),
+  total_amount: z.number().positive(),
   currency: z.string().optional().default("usd"),
 });
 

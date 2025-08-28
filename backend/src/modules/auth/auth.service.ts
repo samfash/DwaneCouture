@@ -111,13 +111,14 @@ export const forgotPassword = async (data: ForgotPasswordRequest, req: Request):
 
   const resetToken = crypto.randomBytes(32).toString("hex");
   const resetTokenExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15-minute expiry
-  const resetUrl = `${req.protocol || "http"}://${req.get("host")}/api/auth/reset-password/${resetToken}`;
+  // const resetUrl = `${req.protocol || "http"}://${req.get("host")}/auth/reset-password/${resetToken}`;
+  const resetUrlLocal = `http://localhost:3000/reset_password?token=${resetToken}`;
 
   await updateUserResetToken(user.id, resetToken, resetTokenExpiry);
   await sendEmail(
     email,
     "Password Reset Request",
-    `Click here to reset your password: ${resetUrl}`,
+    `Click here to reset your password: ${resetUrlLocal}`,
   );
 
   return { message: "Password reset link sent to your email" };

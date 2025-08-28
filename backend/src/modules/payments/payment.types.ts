@@ -17,7 +17,7 @@ export interface PaymentBase {
   export interface CreatePaymentInput {
     order_id: string;
     payment_method: "stripe" | "paystack" | "flutterwave";
-    amount: number;
+    total_amount: number;
     currency?: string;
   }
   

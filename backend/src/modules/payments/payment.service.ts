@@ -8,7 +8,7 @@ import logger from "../../core/logger";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export const handlePaymentInitialization = async (userId: string, data: CreatePaymentInput) => {
-  const { order_id, amount, payment_method } = data;
+  const { order_id, total_amount, payment_method } = data;
   let paymentUrl: string | undefined;
   let providerRef: string | undefined;
 
@@ -20,13 +20,13 @@ export const handlePaymentInitialization = async (userId: string, data: CreatePa
           price_data: {
             currency: "usd",
             product_data: { name: "Order Payment" },
-            unit_amount: Math.round(amount * 100),
+            unit_amount: Math.round(total_amount * 100),
           },
           quantity: 1,
         }],
         mode: "payment",
-        success_url: `${config.app.frontendUrl}/success?orderId=${order_id}&paymentMethod=${payment_method}`,
-        cancel_url: `${config.app.frontendUrl}/failure?orderId=${order_id}`,
+        success_url: `${config.app.frontendUrl}/success?orderId=${order_id}&Method=${payment_method}`,
+        cancel_url: `${config.app.frontendUrl}/success?orderId=${order_id}}&Method=${payment_method}`,
       });
       paymentUrl = session.url ?? "";
       providerRef = session.id;
@@ -38,8 +38,8 @@ export const handlePaymentInitialization = async (userId: string, data: CreatePa
         "https://api.paystack.co/transaction/initialize",
         {
           email: config.email.mailAddress,
-          amount: Math.round(amount * 100),
-          callback_url: `${config.app.frontendUrl}/success?orderId=${order_id}&paymentMethod=${payment_method}`,
+          amount: Math.round(total_amount * 100),
+          callback_url: `${config.app.frontendUrl}/success?orderId=${order_id}&Method=${payment_method}`,
         },
         {
           headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` },
@@ -55,9 +55,9 @@ export const handlePaymentInitialization = async (userId: string, data: CreatePa
         "https://api.flutterwave.com/v3/payments",
         {
           tx_ref: order_id,
-          amount,
+          total_amount,
           currency: "USD",
-          redirect_url: `${config.app.frontendUrl}/success?orderId=${order_id}&paymentMethod=${payment_method}`,
+          redirect_url: `${config.app.frontendUrl}/success?orderId=${order_id}&Method=${payment_method}`,
           customer: { email: config.email.mailAddress },
           customizations: {
             title: "Tailoring App",
@@ -124,7 +124,12 @@ export const handlePaymentVerification = async (
     if (!["pending", "paid", "failed", "refunded"].includes(newStatus)) {
       throw new Error(`Invalid payment status: ${newStatus}`);
     }
-    const updated = await updatePaymentStatusService(payment.id, newStatus as PaymentBase["payment_status"], isSuccess);
+
+    if (!isSuccess && newStatus === "paid") {
+      newStatus = "failed";
+      throw new Error("Payment verification failed");
+    }
+    const updated = await updatePaymentStatusService(payment.id, newStatus as PaymentBase["payment_status"], true);
     if (!updated) {
       return { statusCode: 404, payload: { error: "Payment not found" } };
     }
