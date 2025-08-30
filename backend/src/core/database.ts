@@ -7,7 +7,9 @@ const pool = new Pool({
   database: config.database.name,
   password: config.database.password,
   port: config.database.port,
-  idleTimeoutMillis: 1000, // ✅ Close idle clients after 1 second
+  ssl: { rejectUnauthorized: false }, // required for Supabase in Node
+  max: 20,
+  idleTimeoutMillis: 30000, // ✅ Close idle clients after 30 second
   connectionTimeoutMillis: 5000,
 });
 
